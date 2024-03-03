@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  frontend:
+    container name: react-app
+    build:
+      context: ./ComputexFrontend  # Path to the Dockerfile for frontend
+    ports:
+      - "80:80"  # Port mapping for frontend
+    depends_on:
+      - backend  # Ensure backend is running before starting frontend
+    network:
+    frontend_end
+
+  backend:
+    container name: django-app
+    build:
+      context: ./Computex  # Path to the Dockerfile for backend
+    ports:
+      - "8000:8000"  # Port mapping for backend
+    #environment:
+      #- DATABASE_URL=mysql://username:password@db_host/db_name  # Example database URL
+    depends_on:
+      - database  # Ensure database service is running before starting backend
+    networks:
+      frontend_network
+      backend_network
+
+  database:
+    container name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=computex
+    Volumes:
+      - db-data:/var/lib/postgresql/data
+    network:
+     backend_network
+    
+      
+networks:
+  frontend_network:
+  backend_network:
